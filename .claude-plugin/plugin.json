@@ -1,0 +1,8 @@
+{
+  "name": "sc-plugin",
+  "description": "A shared Claude Code plugin toolkit for the team. Bundles curated skills and agents to boost everyday development workflows.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Danny Chou"
+  }
+}
