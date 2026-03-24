@@ -22,17 +22,17 @@ claude --plugin-dir /path/to/sc-cc-plugin
 
 啟動 Claude Code 後：
 
-- 執行 `/help`，確認看到 `/sc-cc-plugin:spec-recovery` 和 `/sc-cc-plugin:strategic-compact`
-- 執行 `/agents`，確認看到 `spec-scorer` agent
+- 輸入 `/spec`，確認看到帶有 `(sc-cc-plugin)` 標籤的 `/spec-recovery` 和 `/strategic-compact`
+- 輸入 `@spec`，確認看到 `sc-cc-plugin:spec-scorer (agent)`
 
 ## 使用範例
 
 ```bash
 # 回推專案規格
-/sc-cc-plugin:spec-recovery
+/spec-recovery
 
 # 回推單一模組
-/sc-cc-plugin:spec-recovery src/modules/auth
+/spec-recovery src/modules/auth
 ```
 
 ## 需求
