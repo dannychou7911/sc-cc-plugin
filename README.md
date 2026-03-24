@@ -1,4 +1,4 @@
-# sc-plugin
+# sc-cc-plugin
 
 團隊共享的 Claude Code plugin 工具集，收錄經過實戰驗證的 skills 與 agents，提升日常開發效率。
 
@@ -15,24 +15,24 @@
 ### 本地測試
 
 ```bash
-claude --plugin-dir /path/to/sc-plugin
+claude --plugin-dir /path/to/sc-cc-plugin
 ```
 
 ### 驗證安裝
 
 啟動 Claude Code 後：
 
-- 執行 `/help`，確認看到 `/sc-plugin:spec-recovery` 和 `/sc-plugin:strategic-compact`
+- 執行 `/help`，確認看到 `/sc-cc-plugin:spec-recovery` 和 `/sc-cc-plugin:strategic-compact`
 - 執行 `/agents`，確認看到 `spec-scorer` agent
 
 ## 使用範例
 
 ```bash
 # 回推專案規格
-/sc-plugin:spec-recovery
+/sc-cc-plugin:spec-recovery
 
 # 回推單一模組
-/sc-plugin:spec-recovery src/modules/auth
+/sc-cc-plugin:spec-recovery src/modules/auth
 ```
 
 ## 需求
