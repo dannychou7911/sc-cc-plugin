@@ -1,0 +1,20 @@
+{
+    "vue": {
+        "command": "vue-language-server",
+        "args": [
+            "--stdio"
+        ],
+        "extensionToLanguage": {
+            ".vue": "vue"
+        },
+        "initializationOptions": {
+            "typescript": {
+                "tsdk": "node_modules/typescript/lib"
+            },
+            "vue": {
+                "hybridMode": false
+            },
+            "maxRestarts": 3
+        }
+    }
+}
