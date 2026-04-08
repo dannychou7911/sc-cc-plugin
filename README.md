@@ -9,6 +9,7 @@
 | Skill | `spec-recovery` | 從既有程式碼回推 L0-L4 規格文件 |
 | Agent | `spec-scorer` | 規格文件品質評分，獨立審閱避免 confirmation bias |
 | Skill | `strategic-compact` | 在邏輯斷點建議 context compaction，避免 auto-compaction 在不恰當的時機觸發 |
+| Agent | `frontend-code-reviewer` | 程式碼審查專家，檢查品質、安全性與專案慣例，僅回報高信心度問題 |
 
 ## 安裝方式
 
