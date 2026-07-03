@@ -68,7 +68,7 @@ Phase 5: 程式碼內文件建議 (L4) ← 含活文件維護策略
 
 每個 Phase 結束後依序執行以下三步驟（後續以「執行 Phase 結束流程」引用）：
 
-1. **待確認項目確認**：對文件中所有 `[待確認]` 項目，使用 `AskUserQuestion` 工具逐一向使用者確認，將回答寫回文件（更新為 `[確認]` 或 `[未確定]`）
+1. **待確認項目確認**：依 `references/qa-protocol.md`「第一部分」執行——先對所有 `[待確認]` 項目做 Git 考古（有解者升級標記、不列入提問），剩餘項目才用 `AskUserQuestion` 向使用者確認，將回答寫回文件（更新為 `[確認]` 或 `[未確定]`）
 2. **Q&A 協議**：執行 `references/qa-protocol.md`（含業務脈絡收集、補充 Q&A）
 3. **Context 壓縮檢查**：使用 `strategic-compact` skill 評估是否需要壓縮，若建議壓縮則執行 `/compact`。若使用者環境缺少 `strategic-compact` skill 或 `/compact` command，提醒使用者補上
 
@@ -144,6 +144,8 @@ docs/specs/
 │   └── shared-{component-name}.md  ← 使用 ≥2 頁面的共用元件
 ├── L3-api/
 │   ├── api-inventory.md
+│   ├── permission-matrix.md        ← 權限矩陣（每模組 Phase 4 後增量更新）
+│   ├── contract-diff.md            ← 前後端契約差異追蹤（swagger 比對模式）
 │   └── {domain}.md
 └── L4-code-notes/
     └── (建議清單或 PR 形式)
@@ -212,8 +214,8 @@ Phase 3 的首份 L2 檢查點需額外確認：是否產出「驗收場景（Gi
 | ⚡ Agent D | 資料模型（型別定義、DB migration、ORM model） | types/、models/、migration/、schema 相關檔案 |
 
 主 agent 整合 4 個結果後：
-5. 繪製模組清單與依賴關係
-6. **系統級決策考古**：記錄可觀察到的架構決策（技術選型、通訊方式、部署架構），嘗試推斷 why
+1. 繪製模組清單與依賴關係
+2. **系統級決策考古**：記錄可觀察到的架構決策（技術選型、通訊方式、部署架構），嘗試推斷 why
 
 **產出**：L0 系統概觀文件。讀取 `references/templates-L0.md` 取得模板。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（依分層評分策略）。
 

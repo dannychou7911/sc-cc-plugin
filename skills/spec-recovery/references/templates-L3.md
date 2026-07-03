@@ -140,6 +140,8 @@ interface {ResponseTypeName} {
 
 ## 模板 C：前後端契約差異追蹤表
 
+> 檔案：`L3-api/contract-diff.md`。swagger 比對模式的差異輸出落點；反推模式下發現的契約差異也記錄於此。
+
 ```markdown
 # 前後端契約差異追蹤
 
