@@ -26,7 +26,8 @@
 | 名稱 | 說明 |
 |------|------|
 | `frontend-code-reviewer` | 通用程式碼審閱專家，聚焦可讀性、可維護性、安全性與專案慣例，不限框架，僅回報高信心度（>80%）的問題。框架專屬規則由 `references/` 擴充補充 |
-| `spec-scorer` | 規格文件品質評分專家，獨立審閱 `spec-recovery` 產出的 L0-L4 文件（多維度評分、可測試性評分、差異驗證），與主 agent 分離以避免 confirmation bias |
+| `spec-scorer` | 規格文件品質評分專家，獨立審閱 `spec-recovery` 產出的 L0-L4 文件（A 多維度評分、B 可測試性評分），與主 agent 分離以避免 confirmation bias |
+| `spec-verifier` | 規格文件差異驗證專家（C 評分），獨立重讀原始碼盤點行為、比對規格覆蓋率並列出遺漏；繼承 session model 以確保盤點偵測力 |
 
 ### Slash Commands
 
@@ -50,7 +51,7 @@ claude --plugin-dir /path/to/sc-cc-plugin
 啟動 Claude Code 後：
 
 - 輸入 `/`，確認看到帶有 `(sc-cc-plugin)` 標籤的 `/commit`、`/review-mr`、`/rewrite-comments`、`/squash-branch`
-- 輸入 `@`，確認看到 `frontend-code-reviewer` 與 `spec-scorer` 兩個 agent
+- 輸入 `@`，確認看到 `frontend-code-reviewer`、`spec-scorer`、`spec-verifier` 三個 agent
 - 輸入 `/spec`，確認 skills（如 `/sc-cc-plugin:spec-recovery`）出現在清單中
 
 ## 使用範例
