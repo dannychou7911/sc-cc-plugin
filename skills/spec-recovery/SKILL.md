@@ -213,7 +213,7 @@ docs/specs/
 5. 繪製模組清單與依賴關係
 6. **系統級決策考古**：記錄可觀察到的架構決策（技術選型、通訊方式、部署架構），嘗試推斷 why
 
-**產出**：L0 系統概觀文件。讀取 `references/templates-L0.md` 取得模板。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（含啟動 `spec-scorer` agent）。
+**產出**：L0 系統概觀文件。讀取 `references/templates-L0.md` 取得模板。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（依分層評分策略）。
 
 **業務脈絡收集**：Phase 1 Q&A 時，根據分析發現主動收集全局業務脈絡（見 `references/qa-protocol.md`「業務脈絡收集」）。
 
@@ -244,7 +244,7 @@ docs/specs/
 1. **同名異義辨識**（DDD）：如果同一個詞（如「訂單」「使用者」）在不同模組中有不同含義，明確標記
 2. 整理跨模組依賴關係圖
 
-**產出**：L1 模組規格文件。讀取 `references/templates-L1.md` 取得模板。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（含啟動 `spec-scorer` agent）。
+**產出**：L1 模組規格文件。讀取 `references/templates-L1.md` 取得模板。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（依分層評分策略）。
 
 ---
 
@@ -267,7 +267,7 @@ docs/specs/
 
 **業務脈絡收集**：每個模組的 Phase 3 開始前，根據 L1 文件中的發現，收集該模組的業務語義（見 `references/qa-protocol.md`「業務脈絡收集」）。
 
-**產出**：L2 功能規格文件。讀取 `references/templates-L2.md` 取得模板。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（含啟動 `spec-scorer` agent，需額外執行 B 可測試性評分）。
+**產出**：L2 功能規格文件。讀取 `references/templates-L2.md` 取得模板。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（依分層評分策略；L2 需額外執行 B 可測試性評分）。
 
 > 框架特定的萃取技巧，根據偵測到的技術棧載入對應參考文件：
 > - Vue 2 / Nuxt 2 專案：讀取 `references/vue2-nuxt2-patterns.md`
@@ -297,7 +297,7 @@ docs/specs/
 2. 對每支 API 記錄：請求參數、回應格式、錯誤碼
 3. 標記前後端契約中的**隱性假設**：命名轉換、分頁資訊位置、日期格式、數值精度
 
-**產出**：L3 API 規格文件。讀取 `references/templates-L3.md` 取得模板。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（含啟動 `spec-scorer` agent）。
+**產出**：L3 API 規格文件。讀取 `references/templates-L3.md` 取得模板。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（依分層評分策略）。
 
 ---
 
@@ -318,7 +318,7 @@ docs/specs/
 1. 建議標準化標記：TODO、FIXME、HACK、NOTE、@see、@since
 2. **活文件維護策略**：根據專案技術棧，建議讓規格與程式碼同步演進的具體做法
 
-**產出**：L4 程式碼註解建議。讀取 `references/templates-L4.md` 取得模板與標記規範。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（含啟動 `spec-scorer` agent）。
+**產出**：L4 程式碼註解建議。讀取 `references/templates-L4.md` 取得模板與標記規範。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（依分層評分策略）。
 
 ---
 
@@ -389,14 +389,28 @@ docs/specs/
 
 ## 品質檢查與評分
 
-產出規格文件後，依序執行：
+評分由兩個獨立 agent 分工（與產出文件的主 agent 分離，避免 confirmation bias）：
+
+- **`spec-scorer`**（sonnet）：A 多維度評分 + B 可測試性（僅 L2）
+- **`spec-verifier`**（繼承 session model）：C 差異驗證——獨立重讀程式碼盤點行為，比對規格覆蓋率。這是評分中最難的任務，故用較強的模型
+
+### 分層評分策略（控制成本）
+
+| 情境 | 執行內容 |
+|------|---------|
+| 每個 Phase 的**首份文件** | A + B（L2）+ C 全套（與首份文件檢查點對齊） |
+| 後續文件 | 僅 A |
+| C 額外觸發 | 高風險 L2（認證/權限/金額）強制；一般 L2 每 3 份抽 1 份；A < 70 時作為診斷 |
+| 抽樣升級 | 抽樣 C 發現 ≥ 3 個高風險遺漏 → 同批文件全部跑 C |
+
+### 執行順序
 
 1. **自我檢查**（主 agent）：依 `references/analysis-strategy.md`「品質自查清單」和 `references/document-conventions.md` 檢查格式規範
-2. **啟動 `spec-scorer` agent 評分**：使用 Agent tool 啟動 `spec-scorer` 自訂 agent（`subagent_type` 不需指定，直接用 agent name `spec-scorer`）。Prompt 需提供：待評文件路徑、文件層次（L0-L4）、模板格式要求摘要、原始碼目錄路徑、是否啟動差異驗證（C 評分）。模板格式要求可引用 `references/template-summaries.md`，或自行讀取對應 `references/templates-L{N}.md` 後摘要（因 sub agent 無法讀取 skills 目錄）
-3. **差異驗證自動啟用規則**：涉及認證/權限/敏感資料的高風險模組、L2 文件、A 評分 < 70 的文件，必須啟動 C 評分
-4. **後續處理**：≥ 70 通過（記錄分數到進度檔）；60-69 補強最弱 1-2 個維度後重新評分；< 60 重做。修正時必須回到原始碼重新驗證（不憑記憶修正），重新評分必須啟動新的 spec-scorer agent（不可自我評分）。二次評分仍 < 70 則用 `AskUserQuestion` 請人工介入。將**最終分數**記錄到進度檔對應表格
+2. **依分層策略啟動 `spec-verifier`**（若本份需跑 C）：Prompt 提供待驗文件路徑、原始碼目錄。回傳的「行為盤點數」在下一步轉交 scorer
+3. **啟動 `spec-scorer`**：Prompt 提供待評文件路徑、文件層次（L0-L4）、對應模板與規範的**絕對路徑**（`references/templates-L{N}.md`、`references/document-conventions.md`，以本技能所在目錄組合，由 scorer 自行讀取）、C 盤點行為數（若已執行步驟 2）
+4. **後續處理**：≥ 70 通過（記錄分數到進度檔）；60-69 補強最弱 1-2 個維度後重新評分；< 60 重做。C 覆蓋率 < 75% 時回頭補分析遺漏區域。修正時必須回到原始碼重新驗證（不憑記憶修正），重新評分必須啟動新的 agent（不可自我評分）。二次評分仍 < 70、或 C 發現 ≥ 3 個高風險遺漏，則用 `AskUserQuestion` 請人工介入。將**最終分數**記錄到進度檔對應表格
 
-詳細的評分維度、權重矩陣、Prompt 範例、修正流程、進度檔記錄格式，見 `references/scoring-rubric.md`。
+評分方法論（權重設計理由、修正流程細節）見 `references/scoring-rubric.md`；**執行標準以 `agents/spec-scorer.md`、`agents/spec-verifier.md` 為準**。
 
 ---
 
