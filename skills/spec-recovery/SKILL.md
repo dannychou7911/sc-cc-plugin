@@ -165,6 +165,8 @@ docs/specs/
 
 每個 Phase 的**第一份文件**完成後，暫停並用 `AskUserQuestion` 確認粒度、格式、方向是否符合使用者需求。通過後再批量處理剩餘項目。將確認結果記錄到進度檔的「工作偏好」區塊。
 
+Phase 3 的首份 L2 檢查點需額外確認：是否產出「驗收場景（Given-When-Then）」章節（結果記入工作偏好）。
+
 ---
 
 ### Phase 0：既有文件掃描（Existing Documentation Scan）
@@ -292,10 +294,15 @@ docs/specs/
 
 > 若後端不在分析範圍內，僅啟動 Agent A 從前端反推。
 
+**模式分流**（依 Phase 0 是否掃到後端 swagger/openapi 文件）：
+- **有 swagger** → **比對模式**：以 swagger 為後端契約的 source of truth，比對前端呼叫層的假設（參數、必填性、回應欄位使用），差異填入「前後端契約差異追蹤表」（`references/templates-L3.md` 模板 C）——比對比反推更省力也更準
+- **無 swagger** → **反推模式**：照下列流程從程式碼反推；可選產出 OpenAPI YAML，但必須標註「由前端呼叫端反推，非後端宣告，僅代表前端消費的子集」
+
 主 agent 整合後：
 1. 合併為完整 API 端點清單（方法、路徑、認證、角色）
 2. 對每支 API 記錄：請求參數、回應格式、錯誤碼
 3. 標記前後端契約中的**隱性假設**：命名轉換、分頁資訊位置、日期格式、數值精度
+4. **增量更新權限矩陣**：將本模組的「頁面 × 角色」（來源：L2 進入條件）與「API × 角色」（來源：L3 角色限制）併入 `docs/specs/L3-api/permission-matrix.md`（模板見 `references/templates-L3.md` 模板 D）。矩陣拼合後浮現的**前後端權限不一致**（頁面允許但 API 拒絕、API 開放但無頁面入口）列入隱性規則
 
 **產出**：L3 API 規格文件。讀取 `references/templates-L3.md` 取得模板。產出前檢查「文件通用規範」（mermaid、🔴/🟡 分級、TOC）。產出後執行「品質檢查與評分」（依分層評分策略）。
 
@@ -414,9 +421,24 @@ docs/specs/
 
 ---
 
+## 跨文件一致性檢查
+
+單份文件的評分不保證文件之間互相一致。兩個執行時機：**每個模組走完 Phase 3→4→5 的驗收時**（模組範圍）、**全專案收尾時**（全域）。
+
+**機械級檢查（必跑，主 agent 用 Grep 比對即可，不需 LLM）**：
+1. L2 文件提到的 API 端點（方法＋路徑）都存在於 L3 api-inventory
+2. L0 模組清單 ↔ L1 文件一一對應（或標記延後）；L1 頁面清單 ↔ L2 文件對應
+3. 文件間相對連結（如 `shared-xxx.md`）指向存在的檔案
+
+**LLM 級檢查（選跑，輕量 agent）**：
+4. 同一實體的術語跨文件一致（呼應同名異義辨識）
+5. L1 狀態機的狀態值與 L2 條件、L3 enum 一致
+
+不一致項標 `[待確認]` 併入 Q&A 流程，並記入進度檔「待處理項目」。
+
 ## 文件通用規範
 
-所有 L0–L4 產出文件的格式規範（Header、TOC、Confidence Markers、mermaid、隱性規則標記、語言）詳見 `references/document-conventions.md`。
+所有 L0–L4 產出文件的格式規範（Header、TOC、Confidence Markers、mermaid、隱性規則標記、敏感資料遮罩、語言）詳見 `references/document-conventions.md`。
 
 產出前必須對照該規範檢查。
 
