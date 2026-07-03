@@ -13,6 +13,7 @@
 
 > **層次**：L3 — API 規格
 > **最後更新**：{YYYY-MM-DD}
+> **分析基準**：{git short SHA}
 > **狀態**：初版 / 已驗證 / 待更新
 
 ## Base URL
@@ -143,6 +144,7 @@ interface {ResponseTypeName} {
 # 前後端契約差異追蹤
 
 > **最後更新**：{YYYY-MM-DD}
+> **分析基準**：{git short SHA}
 > **用途**：記錄前後端之間的隱性假設與已知差異
 
 | API               | 差異描述                              | 風險等級 | 處理方式     |

@@ -3,8 +3,10 @@
 ## 進度檔位置
 
 ```
-docs/spec-recovery-progress.md
+docs/specs/spec-recovery-progress.md
 ```
+
+> **舊佈局相容**：若專案已存在 `docs/spec-recovery-progress.md`（舊路徑），繼續沿用 `docs/` 佈局，不搬移。
 
 此檔案由 AI 在 Phase 1 結束時建立，後續每完成一個任務單位即時更新。
 
@@ -118,11 +120,11 @@ Phase 1 完成後建立進度檔，包含：
 6. **里程碑完成時**（Phase 完成、格式更新等），記錄到「歷史紀錄」區塊（時間倒序）
 7. **模組內 Q&A 完成後**，標記該模組的 Q&A 完成狀態
 8. **檢查點通過後**，將確認結果記錄到「工作偏好」區塊
-7. **整個模組走完所有 Phase 後**，更新底部「評分彙總」區塊
+9. **整個模組走完所有 Phase 後**，更新底部「評分彙總」區塊
 
 ### 恢復工作時
 
-1. 讀取 `docs/spec-recovery-progress.md`
+1. 讀取進度檔（`docs/specs/spec-recovery-progress.md`；舊佈局為 `docs/spec-recovery-progress.md`）
 2. **必讀「工作偏好」和「待處理項目」**，「歷史紀錄」可跳過
 3. 讀取最近完成的產出檔案（作為格式參考）
 4. 從第一個 ⬚ 或 🔄 項目繼續

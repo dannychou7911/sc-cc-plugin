@@ -75,8 +75,8 @@ Phase 5: 程式碼內文件建議 (L4) ← 含活文件維護策略
 ### Phase 間銜接原則
 
 每個 Phase 開始時（或從中斷處恢復時）：
-1. **先讀取 `docs/spec-recovery-progress.md`** — 必讀「工作偏好」和「待處理項目」，「歷史紀錄」可跳過
-2. **再讀取前一個 Phase 已產出的文件**（如 `docs/L0-system-overview.md`）— 取得分析基礎
+1. **先讀取進度檔**（`docs/specs/spec-recovery-progress.md`；舊佈局為 `docs/spec-recovery-progress.md`）— 必讀「工作偏好」和「待處理項目」，「歷史紀錄」可跳過
+2. **再讀取前一個 Phase 已產出的文件**（如 `docs/specs/L0-system-overview.md`）— 取得分析基礎
 3. 從進度檔中第一個未完成（⬚ 或 🔄）的項目繼續
 
 ### 平行探索策略
@@ -110,6 +110,9 @@ Glob（找檔案）→ Grep（找關鍵模式，定位行號）→ Read(limit: 1
 - 預設用 Read(limit: 1200) 預覽，確認相關才完整讀取
 - 超過 1200 行的檔案，用 offset + limit 讀取剩餘部分
 
+敏感資料規範：
+- 環境變數值、API key/token、密碼、連線字串、內部主機名/IP 一律遮罩後回傳（如 `sk-****`、`{已遮罩}`），不得出現真實值
+
 可復用邏輯追蹤：
 - 若目標檔案引用了可復用邏輯單元（mixin、hook、composable、service、utility、base class、decorator、HOC 等），必須追蹤原始檔並展開其完整行為
 - 特別注意互動行為（輸入過濾、自動提交、焦點管理、鍵盤事件處理、資料轉換）
@@ -128,10 +131,10 @@ Glob（找檔案）→ Grep（找關鍵模式，定位行號）→ Read(limit: 1
 - （無法從程式碼確定的項目）
 ```
 
-所有產出存放於專案 `docs/` 目錄下：
+所有產出存放於專案 `docs/specs/` 目錄下（與人工撰寫的既有文件分開，避免混居與誤掃）：
 
 ```
-docs/
+docs/specs/
 ├── spec-recovery-progress.md   ← 進度追蹤（必須維護）
 ├── L0-system-overview.md
 ├── L1-modules/
@@ -146,9 +149,11 @@ docs/
     └── (建議清單或 PR 形式)
 ```
 
+> **舊佈局相容**：若專案已存在舊路徑進度檔 `docs/spec-recovery-progress.md`，代表先前版本的產出，繼續沿用 `docs/` 佈局，不搬移。
+
 ### 進度追蹤
 
-維護 `docs/spec-recovery-progress.md` 追蹤所有任務的完成狀態。詳見 `references/progress-tracking.md`。
+維護 `docs/specs/spec-recovery-progress.md` 追蹤所有任務的完成狀態。詳見 `references/progress-tracking.md`。
 
 **核心規則**：
 - Phase 1 完成後建立進度檔
@@ -175,6 +180,8 @@ docs/
    - `*.api.md`、`api-docs/**/*`
    - `CLAUDE.md`（專案特定指引）
    - 使用者額外提供的文件路徑
+
+   掃描時**排除本技能的產出**（`docs/specs/`；舊佈局專案則排除進度檔中已登記的檔案），避免重跑時把先前產出當成既有文件
 2. 用 Grep 掃描是否有行內設計註解（如 `@description`、`@design`、`@architecture`）
 3. 整理為**參考資料清單**，標記每份文件的類型與涵蓋範圍
 4. 在後續 Phase 分析時，交叉比對程式碼行為與既有文件描述，標記**文件與實作不一致**之處
@@ -341,6 +348,15 @@ docs/
 3. 針對該模組依序執行 Phase 3 → 4 → 5
 4. Phase 4/5 僅掃描該模組相關的 API 和程式碼（非全專案）
 5. 每個 Phase 結束後執行 Phase 結束流程
+
+### 使用者要求更新既有規格
+
+適用於規格文件已存在、程式碼持續演進後的增量更新。
+
+1. 讀取進度檔與各文件 header 的「分析基準」commit SHA
+2. 對每份文件執行 `git diff {SHA}..HEAD --stat`，比對變動檔案與文件的分析範圍，列出已過期的文件清單
+3. 僅重新分析變動範圍，更新文件內容並刷新 header 的分析基準 SHA
+4. 無法取得 SHA 的舊文件（改版前產出），視為需要完整重新驗證，用 `AskUserQuestion` 詢問是否納入本次範圍
 
 ### 使用者給了單一檔案或模組
 
