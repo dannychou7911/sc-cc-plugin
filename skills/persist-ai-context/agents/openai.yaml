@@ -1,0 +1,4 @@
+interface:
+  display_name: "持久化 AI 協作脈絡"
+  short_description: "管理跨 AI Agent、工具與工作階段的持久化專案協作脈絡"
+  default_prompt: "使用 $persist-ai-context，在此專案初始化或維護 .ai 持久化協作脈絡工作流程，並整合專案既有的正式資訊來源。"
