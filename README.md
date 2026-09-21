@@ -76,3 +76,5 @@ claude --plugin-dir /path/to/sc-cc-plugin
 ## 需求
 
 - Claude Code >= 1.0.33
+- [ChromeDevTools/chrome-devtools-mcp: Chrome DevTools for coding agents](https://github.com/ChromeDevTools/chrome-devtools-mcp)
+- [addyosmani/agent-skills: Production-grade engineering skills for AI coding agents.](https://github.com/addyosmani/agent-skills/tree/main)
